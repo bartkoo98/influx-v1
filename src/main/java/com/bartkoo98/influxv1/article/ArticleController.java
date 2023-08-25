@@ -1,8 +1,10 @@
 package com.bartkoo98.influxv1.article;
 
 import com.bartkoo98.influxv1.utils.AppConstants;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +18,9 @@ class ArticleController {
         this.articleService = articleService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ArticleDto> createArticle(@RequestBody ArticleDto articleDto) {
+    public ResponseEntity<ArticleDto> createArticle(@Valid @RequestBody ArticleDto articleDto) {
         ArticleDto createdArticle = articleService.createArticle(articleDto);
         return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
     }
@@ -37,14 +40,14 @@ class ArticleController {
         ArticleDto article = articleService.getArticleById(id);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<ArticleDto> updateArticle(@RequestBody ArticleDto articleDto,
+    public ResponseEntity<ArticleDto> updateArticle(@Valid @RequestBody ArticleDto articleDto,
                                                     @PathVariable Long id) {
         ArticleDto updatedArticle = articleService.updateArticle(articleDto, id);
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteArticle(@PathVariable Long id) {
        articleService.deleteArticleById(id);

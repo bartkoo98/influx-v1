@@ -9,3 +9,8 @@ spring:
       ddl-auto: update
 
 
+application:
+  security:
+    jwt:
+      secret-key: 9aeab6643d73b7e2d210471a3e82112b074271226e5d1b17411f3413c925097b
+      expiration: 86400000

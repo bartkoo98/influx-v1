@@ -1,5 +1,6 @@
 package com.bartkoo98.influxv1.comment;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ class CommentController {
 
     @PostMapping("/articles/{articleId}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable Long articleId,
-                                                    @RequestBody CommentDto commentDto){
+                                                    @Valid @RequestBody CommentDto commentDto){
         CommentDto newCommentDto = commentService.createComment(articleId, commentDto);
         return new ResponseEntity<>(newCommentDto, HttpStatus.CREATED);
     }
@@ -36,8 +37,8 @@ class CommentController {
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable(value = "articleId") Long articleId,
-                                    @PathVariable(value = "commentId")Long commentId,
-                                    @RequestBody CommentDto commentDto) {
+                                                    @PathVariable(value = "commentId")Long commentId,
+                                                    @Valid @RequestBody CommentDto commentDto) {
         CommentDto updatedComment = commentService.updateComment(articleId, commentId, commentDto);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
