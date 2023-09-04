@@ -40,6 +40,14 @@ class ArticleController {
         ArticleDto article = articleService.getArticleById(id);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ArticleDto>> getArticlesByCategory(@PathVariable Long categoryId) {
+        List<ArticleDto> articlesByCategory = articleService.getArticlesByCategory(categoryId);
+        return new ResponseEntity<>(articlesByCategory, HttpStatus.OK);
+    }
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ArticleDto> updateArticle(@Valid @RequestBody ArticleDto articleDto,

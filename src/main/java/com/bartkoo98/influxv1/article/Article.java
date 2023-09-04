@@ -1,8 +1,12 @@
 package com.bartkoo98.influxv1.article;
 
+import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.comment.Comment;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,10 +24,12 @@ public class Article {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-
     private String content;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

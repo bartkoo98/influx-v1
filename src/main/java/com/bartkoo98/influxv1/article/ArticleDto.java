@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-class ArticleDto {
+public class ArticleDto {
 
     private Long id;
     @NotEmpty
@@ -18,4 +18,5 @@ class ArticleDto {
     @Size(min = 25,message = "Article content should have at least 25 characters." )
     private String content;
     private Set<CommentDto> comments;
+    private Long categoryId;
 }
