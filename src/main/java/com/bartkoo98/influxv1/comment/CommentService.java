@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class CommentService {
+public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final ModelMapper modelMapper;
@@ -22,7 +22,7 @@ class CommentService {
     }
 
     public CommentDto createComment(Long articleId, CommentDto commentDto) {
-        Comment comment = mapToDEntity(commentDto);
+        Comment comment = mapToEntity(commentDto);
         Article article = articleRepository.findById(articleId).orElseThrow();
 
         comment.setArticle(article);
@@ -62,7 +62,7 @@ class CommentService {
         commentRepository.delete(comment);
     }
 
-    private Comment getCommentAssignedToArticleIfNotBelongThrowException(Long articleId, Long commentId) {
+    Comment getCommentAssignedToArticleIfNotBelongThrowException(Long articleId, Long commentId) {
         Article article = articleRepository.findById(articleId).orElseThrow();
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         if(!comment.getArticle().getId().equals(article.getId())) {
@@ -75,7 +75,7 @@ class CommentService {
         return modelMapper.map(comment, CommentDto.class);
     }
 
-    private Comment mapToDEntity(CommentDto commentDto) {
+    private Comment mapToEntity(CommentDto commentDto) {
         return modelMapper.map(commentDto, Comment.class);
     }
 }

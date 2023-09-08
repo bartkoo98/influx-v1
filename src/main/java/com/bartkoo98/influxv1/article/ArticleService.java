@@ -2,7 +2,7 @@ package com.bartkoo98.influxv1.article;
 
 import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.category.CategoryRepository;
-import org.modelmapper.ModelMapper;
+import com.bartkoo98.influxv1.email.EmailService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,18 +19,25 @@ class ArticleService {
     private final ArticleRepository articleRepository;
 
     private final CategoryRepository categoryRepository;
+    private final EmailService emailService;
 
-    public ArticleService(ArticleRepository articleRepository, CategoryRepository categoryRepository) {
+    public ArticleService(ArticleRepository articleRepository,
+                          CategoryRepository categoryRepository,
+                          EmailService emailService) {
         this.articleRepository = articleRepository;
         this.categoryRepository = categoryRepository;
+        this.emailService = emailService;
     }
 
     public ArticleDto createArticle(ArticleDto articleDto) {
-        Category category = categoryRepository.findById(articleDto.getCategoryId()).orElseThrow();
-        Article article = mapToEntity(articleDto);
-        article.setCategory(category);
-        Article newArticle = articleRepository.save(article);
-        return mapToDTO(newArticle);
+            Category category = categoryRepository.findById(articleDto.getCategoryId()).orElseThrow();
+            Article article = mapToEntity(articleDto);
+            article.setCategory(category);
+            Article newArticle = articleRepository.save(article);
+            String id = newArticle.getId() + "";
+            String title = newArticle.getTitle();
+            emailService.sendNotificationAboutNewArticle("bartosztomczuk12@gmail.com", title, id);
+            return mapToDTO(newArticle);
     }
 
     public ArticleResponse getAllArticles(int pageNo, int pageSize, String sortBy, String sortDir) {

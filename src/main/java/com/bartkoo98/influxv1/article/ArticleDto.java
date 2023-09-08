@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.article;
 
 import com.bartkoo98.influxv1.comment.CommentDto;
+import com.bartkoo98.influxv1.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class ArticleDto {
     @NotEmpty
     @Size(min = 25,message = "Article content should have at least 25 characters." )
     private String content;
+
+
     private Set<CommentDto> comments;
     private Long categoryId;
 }
