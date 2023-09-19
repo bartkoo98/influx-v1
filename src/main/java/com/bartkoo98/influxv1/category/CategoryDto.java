@@ -1,13 +1,12 @@
 package com.bartkoo98.influxv1.category;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CategoryDto {
     private Long id;
     private String name;

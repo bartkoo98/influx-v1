@@ -2,10 +2,7 @@ package com.bartkoo98.influxv1.category;
 
 import com.bartkoo98.influxv1.article.Article;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "categories")
 public class Category {
     @Id
@@ -24,5 +22,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Article> articles;
+
+
 
 }

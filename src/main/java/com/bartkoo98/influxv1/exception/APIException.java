@@ -2,6 +2,7 @@ package com.bartkoo98.influxv1.exception;
 
 import org.springframework.http.HttpStatus;
 
+// todo: rozpisac sensowniej wyjatki
 public class APIException extends RuntimeException{
     private HttpStatus status;
     private String message;
@@ -15,6 +16,9 @@ public class APIException extends RuntimeException{
         super(message);
         this.status = status;
         this.message = message1;
+    }
+    public APIException(String message) {
+        this.message = message;
     }
 
     public HttpStatus getStatus() {
