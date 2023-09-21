@@ -1,11 +1,24 @@
 package com.bartkoo98.influxv1;
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@OpenAPIDefinition(
+		info = @Info(
+				title = "InfluxAPP REST APIs",
+				description = "Spring Rest APIs documentation",
+				version = "v1.0"
+		), externalDocs = @ExternalDocumentation(
+				description = "Github repository for project",
+				url = "https://github.com/bartkoo98/influx-v1"
+		)
+)
 public class InfluxV1Application {
 
 	@Bean

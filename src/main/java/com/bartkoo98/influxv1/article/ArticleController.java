@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.article;
 
 import com.bartkoo98.influxv1.utils.AppConstants;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ class ArticleController {
         this.articleService = articleService;
     }
 
+    @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ArticleDto> createArticle(@Valid @RequestBody ArticleDto articleDto) {
@@ -47,7 +49,7 @@ class ArticleController {
         return new ResponseEntity<>(articlesByCategory, HttpStatus.OK);
     }
 
-
+    @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ArticleDto> updateArticle(@Valid @RequestBody ArticleDto articleDto,
@@ -55,6 +57,7 @@ class ArticleController {
         ArticleDto updatedArticle = articleService.updateArticle(articleDto, id);
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
+    @SecurityRequirement(name = "Bear Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteArticle(@PathVariable Long id) {

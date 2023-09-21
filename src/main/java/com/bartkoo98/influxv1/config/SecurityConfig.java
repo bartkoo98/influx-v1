@@ -2,6 +2,8 @@ package com.bartkoo98.influxv1.config;
 
 import com.bartkoo98.influxv1.security.jwt.JwtAuthenticationEntryPoint;
 import com.bartkoo98.influxv1.security.jwt.JwtAuthenticationFilter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,7 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableMethodSecurity //(prePostEnabled = true)
+@EnableMethodSecurity
+@SecurityScheme(
+        name = "Bear Authentication",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SecurityConfig {
 
    private UserDetailsService userDetailsService;
@@ -48,6 +56,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) ->
                 authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
 
                 ).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint)

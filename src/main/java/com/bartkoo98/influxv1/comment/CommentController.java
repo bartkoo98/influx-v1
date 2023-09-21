@@ -1,8 +1,10 @@
 package com.bartkoo98.influxv1.comment;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,8 @@ class CommentController {
         CommentDto commentForArticle = commentService.getCommentForArticle(articleId, commentId);
         return new ResponseEntity<>(commentForArticle, HttpStatus.OK);
     }
-
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable(value = "articleId") Long articleId,
                                                     @PathVariable(value = "commentId")Long commentId,
@@ -42,7 +45,8 @@ class CommentController {
         CommentDto updatedComment = commentService.updateComment(articleId, commentId, commentDto);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
-
+    @SecurityRequirement(name = "Bear Authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable(value = "articleId") Long articleId,
                                                 @PathVariable(value = "commentId")Long commentId) {

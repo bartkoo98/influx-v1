@@ -1,5 +1,6 @@
 package com.bartkoo98.influxv1.category;
 
+import com.bartkoo98.influxv1.security.jwt.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,8 @@ public class CategoryControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private CategoryService categoryService;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private ObjectMapper objectMapper;
     private CategoryDto categoryDto;

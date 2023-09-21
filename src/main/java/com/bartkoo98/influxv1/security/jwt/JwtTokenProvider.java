@@ -49,7 +49,7 @@ public class JwtTokenProvider {
         return username;
     }
 
-    // dodac wyjatki
+    // todo dodac wyjatki
     public boolean validateToken(String token) {
         Jwts.parserBuilder()
                 .setSigningKey(key())
