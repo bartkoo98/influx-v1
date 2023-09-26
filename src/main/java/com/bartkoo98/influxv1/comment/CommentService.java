@@ -20,7 +20,7 @@ public class CommentService {
         this.articleRepository = articleRepository;
         this.modelMapper = modelMapper;
     }
-
+// todo podzielic mozliwosc tworzenia komentarzy dla zalogowanych i niezalogowanych uzytkownikow
     public CommentDto createComment(Long articleId, CommentDto commentDto) {
         Comment comment = mapToEntity(commentDto);
         Article article = articleRepository.findById(articleId).orElseThrow();

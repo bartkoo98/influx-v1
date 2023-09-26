@@ -4,6 +4,7 @@ import com.bartkoo98.influxv1.user.User;
 import com.bartkoo98.influxv1.user.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,4 +36,6 @@ class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 authorities);
     }
+
+
 }

@@ -1,14 +1,14 @@
 package com.bartkoo98.influxv1.article;
 
-import com.bartkoo98.influxv1.comment.CommentDto;
-import com.bartkoo98.influxv1.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class ArticleDto {
 
     private Long id;
@@ -18,8 +18,7 @@ public class ArticleDto {
     @NotEmpty
     @Size(min = 25,message = "Article content should have at least 25 characters." )
     private String content;
+    private LocalDateTime createdAt;
 
-
-    private Set<CommentDto> comments;
     private Long categoryId;
 }

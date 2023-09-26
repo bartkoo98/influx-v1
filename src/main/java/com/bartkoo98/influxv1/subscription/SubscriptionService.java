@@ -1,41 +1,45 @@
 package com.bartkoo98.influxv1.subscription;
 
+import com.bartkoo98.influxv1.exception.APIException;
 import com.bartkoo98.influxv1.user.User;
 import com.bartkoo98.influxv1.user.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import static com.bartkoo98.influxv1.subscription.SubscriptionMapper.mapToDto;
-import static com.bartkoo98.influxv1.subscription.SubscriptionMapper.mapToEntity;
 
 @Service
 class SubscriptionService {
     private SubscriptionRepository subscriptionRepository;
-    private ModelMapper modelMapper;
     private UserRepository userRepository;
 
-    public SubscriptionService(SubscriptionRepository subscriptionRepository, ModelMapper modelMapper, UserRepository userRepository) {
+    public SubscriptionService(SubscriptionRepository subscriptionRepository, UserRepository userRepository) {
         this.subscriptionRepository = subscriptionRepository;
-        this.modelMapper = modelMapper;
         this.userRepository = userRepository;
     }
 
+//    public void createSubscription() {
+//        Subscription subscription = new Subscription();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String name = authentication.getName();
+//        subscription.setUser(userRepository.findByUsername(name).orElseThrow());
+//        subscriptionRepository.save(subscription);
+//    }
+
     public void createSubscription() {
-        Subscription subscription = new Subscription();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Long userId = ((User) authentication.getPrincipal()).getId();
-        subscription.setUserId(userId);
-        subscriptionRepository.save(subscription);
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            User user = userRepository.findByUsernameOrEmail(username, username).orElse(null);
+
+            if (user != null) {
+                Subscription subscription = new Subscription();
+                subscription.setUser(user);
+                subscriptionRepository.save(subscription);
+            } else {
+                throw new APIException("Something went wrong! Username " + username + " not exist.");
+            }
+        }
     }
 
-
-    private Long findUserIdByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
-        return user.getId();
-    }
 }
 

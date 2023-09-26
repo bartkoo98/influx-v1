@@ -6,6 +6,7 @@ import com.bartkoo98.influxv1.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,9 @@ public class Article {
     private String title;
     @Column(nullable = false)
     private String content;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 

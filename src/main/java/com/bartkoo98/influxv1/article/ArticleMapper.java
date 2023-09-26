@@ -1,21 +1,30 @@
 package com.bartkoo98.influxv1.article;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-// todo zmienic na mapper recznie pisany
-@Component
+import com.bartkoo98.influxv1.category.Category;
+
+import java.time.LocalDateTime;
+
 class ArticleMapper {
-    private static ModelMapper modelMapper;
 
-    public ArticleMapper(ModelMapper modelMapper) {
-        ArticleMapper.modelMapper = modelMapper;
+    public static ArticleDto mapToArticleDto(Article article) {
+        return ArticleDto.builder()
+                .id(article.getId())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .createdAt(LocalDateTime.now())
+                .categoryId(article.getCategory().getId())
+                .build();
     }
 
-    static ArticleDto mapToDTO(Article article) {
-        return modelMapper.map(article, ArticleDto.class);
-    }
-
-    static Article mapToEntity(ArticleDto articleDto) {
-        return modelMapper.map(articleDto, Article.class);
+    public static Article mapToArticle(ArticleDto articleDto) {
+        Category category = new Category();
+        category.setId(articleDto.getId());
+        return Article.builder()
+                .id(articleDto.getId())
+                .title(articleDto.getTitle())
+                .content(articleDto.getContent())
+                .createdAt(LocalDateTime.now())
+                .category(category)
+                .build();
     }
 }
