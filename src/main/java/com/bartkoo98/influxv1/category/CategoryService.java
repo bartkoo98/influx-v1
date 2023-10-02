@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.category;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ class CategoryService {
     }
 
     public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new APIException("Category with the given id does not exist."));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         return mapToCategoryDto(category);
     }
 
@@ -40,7 +41,7 @@ class CategoryService {
     }
 
     public CategoryDto updateCategory(CategoryDto categoryDto, Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new APIException("Category with the given id does not exist."));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         category.setName(categoryDto.getName());
 
         Category updatedCategory = categoryRepository.save(category);
@@ -48,7 +49,7 @@ class CategoryService {
     }
 
     public void deleteCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new APIException("Category with the given id does not exist."));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         categoryRepository.delete(category);
     }
 

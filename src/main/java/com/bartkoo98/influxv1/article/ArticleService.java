@@ -4,6 +4,8 @@ import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.category.CategoryRepository;
 import com.bartkoo98.influxv1.email.EmailService;
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
+import com.bartkoo98.influxv1.subscription.SubscriptionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,9 +43,11 @@ class ArticleService {
             Article newArticle = articleRepository.save(article);
             String id = newArticle.getId() + "";
             String title = newArticle.getTitle();
-            emailService.sendNotificationAboutNewArticle("bartosztomczuk12@gmail.com", title, id); // todo zmienic odbiorcow
+            List<String> emailsOfSubscribers = emailService.getEmailsOfSubscribers();
+            emailService.sendNotificationAboutNewArticle(emailsOfSubscribers, title, id);
             return mapToArticleDto(newArticle);
     }
+
 
     public ArticleResponse getAllArticles(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
@@ -68,19 +72,19 @@ class ArticleService {
     }
 
     public ArticleDto getArticleById(Long id) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new APIException("Cannot find article with given ID = " + id));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Article", "id", id));
         return mapToArticleDto(article);
     }
 
     public List<ArticleDto> getArticlesByCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new APIException("Cannot find articles with given category ID = " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
         List<Article> articles = articleRepository.findByCategoryId(category.getId());
         return articles.stream().map(ArticleMapper::mapToArticleDto).toList();
     }
 
     public ArticleDto updateArticle(ArticleDto articleDto, Long id) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new APIException("Cannot find article with given ID = " + id));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Article", "id", id));
         Category category = categoryRepository.findById(articleDto.getCategoryId()).orElseThrow();
         article.setTitle(articleDto.getTitle());
         article.setContent(articleDto.getContent());
@@ -91,7 +95,7 @@ class ArticleService {
     }
 
     public void deleteArticleById(Long id) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new APIException("Cannot find article with given ID = " + id));
+        Article article = articleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Article", "id", id));
         articleRepository.delete(article);
     }
 

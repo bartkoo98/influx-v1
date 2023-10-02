@@ -17,13 +17,6 @@ class SubscriptionService {
         this.userRepository = userRepository;
     }
 
-//    public void createSubscription() {
-//        Subscription subscription = new Subscription();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String name = authentication.getName();
-//        subscription.setUser(userRepository.findByUsername(name).orElseThrow());
-//        subscriptionRepository.save(subscription);
-//    }
 
     public void createSubscription() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
