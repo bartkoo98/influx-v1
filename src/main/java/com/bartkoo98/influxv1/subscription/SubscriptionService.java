@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.subscription;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.user.User;
 import com.bartkoo98.influxv1.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,10 @@ class SubscriptionService {
             User user = userRepository.findByUsernameOrEmail(username, username).orElse(null);
 
             if (user != null) {
+                Subscription existingSubscription = subscriptionRepository.findByUser(user);
+                if(existingSubscription != null) {
+                    throw new APIException("User already has subscription.");
+                }
                 Subscription subscription = new Subscription();
                 subscription.setUser(user);
                 subscriptionRepository.save(subscription);

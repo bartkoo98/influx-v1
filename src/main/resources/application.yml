@@ -8,6 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
   mail:
     host: ${EMAIL_HOST}
     port: ${EMAIL_PORT}
@@ -29,14 +30,11 @@ spring:
     verify:
       host: ${VERIFY_EMAIL_HOST}
 
-
 application:
   security:
     jwt:
       secret-key: 9aeab6643d73b7e2d210471a3e82112b074271226e5d1b17411f3413c925097b
       expiration: 86400000
-
-
 
 EMAIL_HOST: smtp.gmail.com
 EMAIL_PORT: 587

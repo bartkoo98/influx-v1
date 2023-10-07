@@ -1,8 +1,13 @@
 package com.bartkoo98.influxv1.user;
 
+import com.bartkoo98.influxv1.comment.Comment;
+import com.bartkoo98.influxv1.subscription.Subscription;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -30,5 +35,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
 
 }
