@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.category;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +43,6 @@ public class CategoryServiceTest {
                 .build();
     }
 
-    @DisplayName("JUnit test for saveCategory method")
     @Test
     public void categoryService_saveCategory_returnCategoryDto() {
         given(categoryRepository.findByName(categoryDto.getName()))
@@ -51,9 +52,10 @@ public class CategoryServiceTest {
         CategoryDto savedCategory = categoryService.saveCategory(categoryDto);
 
         assertThat(savedCategory).isNotNull();
+        assertThat(savedCategory.getId()).isEqualTo(1L);
+        assertThat(savedCategory.getName()).isEqualTo("Technology");
     }
 
-    @DisplayName("JUnit test for saveCategory method which throws exception")
     @Test
     public void categoryService_saveCategory_throwsException() {
         given(categoryRepository.findByName(categoryDto.getName()))
@@ -67,7 +69,6 @@ public class CategoryServiceTest {
     }
 
 
-    @DisplayName("JUnit test for getAllCategories method")
     @Test
     public void categoryService_getAllCategories_returnListOfCategoryDto() {
         Category category2 = Category.builder()
@@ -84,7 +85,6 @@ public class CategoryServiceTest {
         assertThat(result.get(0).getName()).isEqualTo("Technology");
         assertThat(result.get(1).getName()).isEqualTo("Science");
     }
-    @DisplayName("JUnit test for getCategoryById method")
     @Test
     public void categoryService_getCategoryById_returnCategoryDto() {
 
@@ -95,18 +95,16 @@ public class CategoryServiceTest {
         assertThat(savedCategory).isNotNull();
     }
 
-    @DisplayName("JUnit test for getCategoryById method which throws exception")
     @Test
     public void categoryService_getCategoryById_throwsException() {
         long nonExistentId = 123L;
         given(categoryRepository.findById(nonExistentId)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryService.getCategoryById(nonExistentId))
-                .isInstanceOf(APIException.class)
-                .hasMessageContaining("Category with the given id does not exist.");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Category not found with id: 123");
     }
 
-    @DisplayName("JUnit test for updateCategory method")
     @Test
     public void categoryService_updateCategory_returnCategoryDto() {
         given(categoryRepository.findById(category.getId())).willReturn(Optional.ofNullable(category));
@@ -116,18 +114,16 @@ public class CategoryServiceTest {
 
         assertThat(updateCategory).isNotNull();
     }
-    @DisplayName("JUnit test for updateCategory method which throws exception")
     @Test
     public void categoryService_updateCategory_throwsException() {
         long nonExistentId = 123L;
         given(categoryRepository.findById(nonExistentId)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryService.updateCategory(categoryDto, nonExistentId))
-                .isInstanceOf(APIException.class)
-                .hasMessageContaining("Category with the given id does not exist.");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Category not found with id: 123");
     }
 
-    @DisplayName("JUnit test for deleteCategoryById method")
     @Test
     public void categoryService_deleteCategoryById_returnVoid() {
         given(categoryRepository.findById(category.getId())).willReturn(Optional.ofNullable(category));
@@ -136,7 +132,6 @@ public class CategoryServiceTest {
 
         assertAll(() -> categoryService.deleteCategoryById(category.getId()));
     }
-    @DisplayName("JUnit test for deleteCategoryById method which throws exception")
     @Test
     public void categoryService_deleteCategoryById_throwsException() {
 
@@ -144,8 +139,8 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(nonExistentId)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryService.deleteCategoryById(nonExistentId))
-                .isInstanceOf(APIException.class)
-                .hasMessageContaining("Category with the given id does not exist.");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Category not found with id: 123");
     }
 
 

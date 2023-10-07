@@ -49,7 +49,6 @@ public class JwtTokenProvider {
         return username;
     }
 
-    // todo dodac wyjatki
     public boolean validateToken(String token) {
         Jwts.parserBuilder()
                 .setSigningKey(key())

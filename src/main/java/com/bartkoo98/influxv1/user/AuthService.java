@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.user;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.security.jwt.JwtTokenProvider;
 import com.bartkoo98.influxv1.user.dto.LoginDto;
 import com.bartkoo98.influxv1.user.dto.RegisterDto;
@@ -48,10 +49,11 @@ class AuthService {
 
     public String register(RegisterDto registerDto) {
         if(userRepository.existsByUsername(registerDto.getUsername())) {
-            throw new APIException(HttpStatus.BAD_REQUEST, "Username is already exists.");
+            throw new ResourceAlreadyExistsException("Username", registerDto.getUsername());
         }
         if(userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new APIException(HttpStatus.BAD_REQUEST, "Email is already exists.");
+            throw new ResourceAlreadyExistsException("Email", registerDto.getUsername());
+
         }
 
         User user = new User();

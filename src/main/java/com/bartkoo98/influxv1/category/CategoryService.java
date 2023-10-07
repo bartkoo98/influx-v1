@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.category;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ class CategoryService {
     public CategoryDto saveCategory(CategoryDto categoryDto) {
         Optional<Category> savedCategory = categoryRepository.findByName(categoryDto.getName());
         if(savedCategory.isPresent()) {
-            throw new APIException("Category already exists with given name: " + categoryDto.getName());
+            throw new ResourceAlreadyExistsException("Category", categoryDto.getName());
         }
         Category category = mapToCategory(categoryDto);
         Category newCategory = categoryRepository.save(category);

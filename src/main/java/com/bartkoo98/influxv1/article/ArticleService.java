@@ -4,6 +4,7 @@ import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.category.CategoryRepository;
 import com.bartkoo98.influxv1.email.EmailService;
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import com.bartkoo98.influxv1.subscription.SubscriptionRepository;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ class ArticleService {
             Category category = categoryRepository.findById(articleDto.getCategoryId()).orElseThrow();
             Optional<Article> savedArticle = articleRepository.findByTitle(articleDto.getTitle());
             if(savedArticle.isPresent()) {
-                throw new APIException("Article already exists with given title: " + articleDto.getTitle());
+                throw new ResourceAlreadyExistsException("Article", articleDto.getTitle());
             }
             Article article = mapToArticle(articleDto);
             article.setCategory(category);
