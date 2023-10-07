@@ -4,7 +4,7 @@ import com.bartkoo98.influxv1.category.Category;
 
 import java.time.LocalDateTime;
 
-class ArticleMapper {
+public class ArticleMapper {
 
     public static ArticleDto mapToArticleDto(Article article) {
         return ArticleDto.builder()

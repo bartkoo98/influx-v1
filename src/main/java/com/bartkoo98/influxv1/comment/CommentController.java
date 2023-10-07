@@ -17,7 +17,7 @@ class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/articles/{articleId}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable Long articleId,
                                                     @Valid @RequestBody CommentDto commentDto){
@@ -37,7 +37,7 @@ class CommentController {
         return new ResponseEntity<>(commentForArticle, HttpStatus.OK);
     }
     @SecurityRequirement(name = "Bear Authentication")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable(value = "articleId") Long articleId,
                                                     @PathVariable(value = "commentId")Long commentId,

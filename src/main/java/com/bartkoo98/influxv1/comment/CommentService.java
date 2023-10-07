@@ -3,58 +3,87 @@ package com.bartkoo98.influxv1.comment;
 import com.bartkoo98.influxv1.article.Article;
 import com.bartkoo98.influxv1.article.ArticleRepository;
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
+import com.bartkoo98.influxv1.exception.UnauthorizedException;
+import com.bartkoo98.influxv1.user.User;
+import com.bartkoo98.influxv1.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.bartkoo98.influxv1.comment.CommentMapper.mapToComment;
+import static com.bartkoo98.influxv1.comment.CommentMapper.mapToCommentDto;
 
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
-    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository, ModelMapper modelMapper) {
+    public CommentService(CommentRepository commentRepository,
+                          ArticleRepository articleRepository,
+                          UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.articleRepository = articleRepository;
-        this.modelMapper = modelMapper;
+        this.userRepository = userRepository;
     }
 // todo podzielic mozliwosc tworzenia komentarzy dla zalogowanych i niezalogowanych uzytkownikow
-    public CommentDto createComment(Long articleId, CommentDto commentDto) {
-        Comment comment = mapToEntity(commentDto);
-        Article article = articleRepository.findById(articleId).orElseThrow();
-
-        comment.setArticle(article);
-        Comment newComment = commentRepository.save(comment);
-
-        return mapToDto(newComment);
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            return userRepository.findByUsernameOrEmail(username, username).orElse(null);
+        }
+        throw new UnauthorizedException();
     }
+
+    public CommentDto createComment(Long articleId, CommentDto commentDto) {
+        User user = getAuthenticatedUser();
+            if (user != null) {
+                Comment comment = mapToComment(commentDto);
+                Article article = articleRepository.findById(articleId).orElseThrow(() -> new ResourceNotFoundException("Article", "id", articleId));
+
+                comment.setArticle(article);
+                comment.setUser(user);
+                Comment newComment = commentRepository.save(comment);
+
+                return mapToCommentDto(newComment);
+            } else {
+                throw new APIException(HttpStatus.NOT_FOUND, "Something went wrong! User not exists.");
+            }
+        }
+
 
     public List<CommentDto> getAllCommentsForArticle(Long articleId) {
         List<Comment> comments = commentRepository.findByArticleId(articleId);
         return comments.stream()
-                .map(this::mapToDto)
+                .map(CommentMapper::mapToCommentDto)
                 .toList();
     }
 
     public CommentDto getCommentForArticle(Long articleId, Long commentId) {
         Comment comment = getCommentAssignedToArticleIfNotBelongThrowException(articleId, commentId);
-        return mapToDto(comment);
+        return mapToCommentDto(comment);
     }
 
-    
 
-    public CommentDto updateComment(Long articleId, Long commentId, CommentDto commentRequest) {
-        Comment comment = getCommentAssignedToArticleIfNotBelongThrowException(articleId, commentId);
+    public CommentDto updateComment(Long articleId, Long commentId, CommentDto commentDto) {
+        User user = getAuthenticatedUser();
+        if(user != null) {
+            Comment comment = getCommentAssignedToArticleIfNotBelongThrowException(articleId, commentId);
+            if (!comment.getUser().getId().equals(user.getId())) {
+                throw new UnauthorizedException();
+            }
+            comment.setBody(commentDto.getBody());
+            Comment updatedComment = commentRepository.save(comment);
 
-        comment.setName(commentRequest.getName());
-        comment.setEmail(commentRequest.getEmail());
-        comment.setBody(commentRequest.getBody());
-
-        Comment updatedComment = commentRepository.save(comment);
-
-        return mapToDto(updatedComment);
+            return mapToCommentDto(updatedComment);
+        }
+        throw new UnauthorizedException();
     }
 
     public void deleteCommentById(Long articleId, Long commentId) {
@@ -63,19 +92,13 @@ public class CommentService {
     }
 
     Comment getCommentAssignedToArticleIfNotBelongThrowException(Long articleId, Long commentId) {
-        Article article = articleRepository.findById(articleId).orElseThrow();
-        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ResourceNotFoundException("Article", "id", articleId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
         if(!comment.getArticle().getId().equals(article.getId())) {
             throw new APIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
         }
         return comment;
     }
 
-    private CommentDto mapToDto(Comment comment) {
-        return modelMapper.map(comment, CommentDto.class);
-    }
 
-    private Comment mapToEntity(CommentDto commentDto) {
-        return modelMapper.map(commentDto, Comment.class);
-    }
 }

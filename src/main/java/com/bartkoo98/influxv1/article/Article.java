@@ -2,7 +2,6 @@ package com.bartkoo98.influxv1.article;
 
 import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.comment.Comment;
-import com.bartkoo98.influxv1.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

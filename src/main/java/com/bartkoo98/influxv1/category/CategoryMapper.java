@@ -4,16 +4,17 @@ public class CategoryMapper {
 
 
     public static CategoryDto mapToCategoryDto(Category category) {
-        return new CategoryDto(
-                category.getId(), category.getName()
-        );
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
     }
 
     public static Category mapToCategory(CategoryDto categoryDto) {
-        Category category = new Category();
-        category.setName(categoryDto.getName());
-        category.setId(categoryDto.getId());
-        return category;
+        return Category.builder()
+                .id(categoryDto.getId())
+                .name(categoryDto.getName())
+                .build();
     }
 
 
