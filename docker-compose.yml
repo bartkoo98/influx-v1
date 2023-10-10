@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  api:
+    container_name: influx-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+#    networks:
+#      springboot-postgres-network:
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/influx-v1
+
+  db:
+    container_name: postgresdb
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: Bartek12.
+      POSTGRES_USER: postgres
+      POSTGRES_DB: influx-v1
+#    networks:
+#      springboot-postgres-network:
+#
+#networks:
+#  springboot-postgres-network:
