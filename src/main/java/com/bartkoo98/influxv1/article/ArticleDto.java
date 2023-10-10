@@ -2,12 +2,14 @@ package com.bartkoo98.influxv1.article;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ArticleDto {
 
@@ -16,7 +18,7 @@ public class ArticleDto {
     @Size(min = 4, message = "Article title should have at least 4 characters.")
     private String title;
     @NotEmpty
-    @Size(min = 25,message = "Article content should have at least 25 characters." )
+    @Size(min = 40,message = "Article content should have at least 40 characters." )
     private String content;
     private LocalDateTime createdAt;
 

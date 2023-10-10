@@ -1,14 +1,12 @@
 package com.bartkoo98.influxv1.article;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 class ArticleResponse {
     private List<ArticleDto> content;
     private int pageNo;

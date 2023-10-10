@@ -1,28 +1,31 @@
 spring:
   datasource:
+#    url: jdbc:postgresql://db:5432/influx_database
     url: jdbc:postgresql://localhost:5432/influx-v1
     username: postgres
     password: Bartek12.
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+#      ddl-auto: validate
+          ddl-auto: update
     show-sql: true
 
+  flyway:
+    enabled: true
+    password: Bartek12.
+    user: postgres
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+
   mail:
-    host: ${EMAIL_HOST}
-    port: ${EMAIL_PORT}
-    username: ${EMAIL_ADDRESS}
-    password: ${EMAIL_PASSWORD}
+    host: smtp.gmail.com
+    port: 587
+    username: springinflux@gmail.com
+    password: zjeezmhxprugffrz
     default-encoding: UTF-8
     properties:
-      mail:
-        mime:
-          charset: UTF
-        smtp:
-          write-timeout: 10000
-          connection-timeout: 10000
-          timeout: 10000
           auth: true
           starttls:
             enable: true
@@ -30,14 +33,16 @@ spring:
     verify:
       host: ${VERIFY_EMAIL_HOST}
 
+VERIFY_EMAIL_HOST: http://localhost:8080
+
 application:
   security:
     jwt:
       secret-key: 9aeab6643d73b7e2d210471a3e82112b074271226e5d1b17411f3413c925097b
       expiration: 86400000
 
-EMAIL_HOST: smtp.gmail.com
-EMAIL_PORT: 587
-EMAIL_ADDRESS: springinflux@gmail.com
-EMAIL_PASSWORD: zjeezmhxprugffrz
-VERIFY_EMAIL_HOST: http://localhost:8080
+#EMAIL_HOST: smtp.gmail.com
+#EMAIL_PORT: 587
+#EMAIL_ADDRESS: springinflux@gmail.com
+#EMAIL_PASSWORD: zjeezmhxprugffrz
+#VERIFY_EMAIL_HOST: http://localhost:8080

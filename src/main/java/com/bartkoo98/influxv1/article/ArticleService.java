@@ -3,10 +3,8 @@ package com.bartkoo98.influxv1.article;
 import com.bartkoo98.influxv1.category.Category;
 import com.bartkoo98.influxv1.category.CategoryRepository;
 import com.bartkoo98.influxv1.email.EmailService;
-import com.bartkoo98.influxv1.exception.APIException;
 import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
-import com.bartkoo98.influxv1.subscription.SubscriptionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bartkoo98.influxv1.article.ArticleMapper.*;
+import static com.bartkoo98.influxv1.article.ArticleMapper.mapToArticle;
+import static com.bartkoo98.influxv1.article.ArticleMapper.mapToArticleDto;
 
 @Service
 class ArticleService {

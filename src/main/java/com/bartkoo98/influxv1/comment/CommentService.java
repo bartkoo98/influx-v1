@@ -7,7 +7,6 @@ import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import com.bartkoo98.influxv1.exception.UnauthorizedException;
 import com.bartkoo98.influxv1.user.User;
 import com.bartkoo98.influxv1.user.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

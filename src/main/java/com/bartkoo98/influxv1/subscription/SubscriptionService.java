@@ -18,7 +18,7 @@ class SubscriptionService {
         this.userRepository = userRepository;
     }
 
-
+// todo unsubcription
     public void createSubscription() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {

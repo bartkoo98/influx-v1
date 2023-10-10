@@ -1,6 +1,7 @@
 package com.bartkoo98.influxv1.category;
 
 import com.bartkoo98.influxv1.exception.APIException;
+import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,8 +65,8 @@ public class CategoryServiceTest {
         Throwable thrownException = catchThrowable(() -> categoryService.saveCategory(categoryDto));
 
         assertThat(thrownException)
-                .isInstanceOf(APIException.class)
-                .hasMessageContaining("Category already exists with given name: Technology");
+                .isInstanceOf(ResourceAlreadyExistsException.class)
+                .hasMessageContaining("Category with name 'Technology' already exists.");
     }
 
 

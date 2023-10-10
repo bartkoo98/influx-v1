@@ -1,6 +1,5 @@
 package com.bartkoo98.influxv1.category;
 
-import com.bartkoo98.influxv1.exception.APIException;
 import com.bartkoo98.influxv1.exception.ResourceAlreadyExistsException;
 import com.bartkoo98.influxv1.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
