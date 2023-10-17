@@ -12,9 +12,9 @@ One of the standout features of this project is its subscription system. Users c
 ## What I used?
 - Java 17
 - Spring Boot 3
-- Spring Framework(Data JPA, Validation, Security, Mail)
+- Spring Framework(Data JPA, Validation, Security)
 - PostgreSQL
-- Hibernate
+- Docker
 - Junit, Assertj, Mockito
 - Maven
 - Lombok
