@@ -3,7 +3,7 @@
 ## About:
 *Currently working on another project
 
-Meet my main ongoing project – a Spring-based API that creates a versatile blogging platform that offers a rich feature set for both users and administrators. 
+Meet my main project – a Spring-based API that creates a versatile blogging platform that offers a rich feature set for both users and administrators. 
 This dynamic system allows users to create and manage articles, comment on them, and categorize their content. With a dual-role system in place, administrators have additional control and privileges.
 
 
